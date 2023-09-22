@@ -8,7 +8,6 @@ from tensorflow.keras.layers import LSTM, Dense
 
 def haal_financiele_gegevens_op(symbool, startdatum, einddatum):
     df = yf.download(symbool, start=startdatum, end=einddatum)
-    print(df)
     return df
 
 def voorbereid_trainingsdataset(symbool, einddatum, sequence_length, aantal_reeksen=6400):
@@ -48,7 +47,7 @@ def sla_model_op(model, model_naam):
     model.save(f'{model_naam}.keras')
     print(f'{model_naam}.keras is succesvol opgeslagen.')
 
-symbools = ["AAPL"]
+symbools = ["^SPX"]
 einddatum = '2023-08-08'
 sequence_length = 30
 batch_size = 32
