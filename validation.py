@@ -1,3 +1,4 @@
+# coding: iso-8859-1 -*-
 import yfinance as yf
 import numpy as np
 from datetime import datetime, timedelta
@@ -8,17 +9,17 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 
-def bereid_financiële_gegevens_voor(financiële_gegevens):
-    financiële_gegevens = financiële_gegevens.copy()
-    financiële_gegevens[['Open', 'High', 'Low', 'Close']] /= 10000
-    financiële_gegevens['Weekdag'] = financiële_gegevens.index.weekday
-    financiële_gegevens['Weekdag'] /= 10
-    financiële_gegevens.fillna(0.0, inplace=True)
-    financiële_gegevens.replace(0.0, 1e-7, inplace=True)
-    financiële_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
-    return financiële_gegevens
+def bereid_financiÃ«le_gegevens_voor(financiÃ«le_gegevens):
+    financiÃ«le_gegevens = financiÃ«le_gegevens.copy()
+    financiÃ«le_gegevens[['Open', 'High', 'Low', 'Close']] /= 10000
+    financiÃ«le_gegevens['Weekdag'] = financiÃ«le_gegevens.index.weekday
+    financiÃ«le_gegevens['Weekdag'] /= 10
+    financiÃ«le_gegevens.fillna(0.0, inplace=True)
+    financiÃ«le_gegevens.replace(0.0, 1e-7, inplace=True)
+    financiÃ«le_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
+    return financiÃ«le_gegevens
 
-def haal_financiële_gegevens_op(symbool, startdatum, einddatum):
+def haal_financiÃ«le_gegevens_op(symbool, startdatum, einddatum):
     df = yf.download(symbool, start=startdatum, end=einddatum)
     return df
 
@@ -27,15 +28,15 @@ def voorbereid_validatiedataset(symbool, sequence_length, aantal_reeksen=1600):
     startdatum_datetime = datetime.now() - timedelta(days=5*365)  # 15 jaar geleden
     startdatum = startdatum_datetime.strftime('%Y-%m-%d')
 
-    financiële_gegevens = haal_financiële_gegevens_op(symbool, startdatum, einddatum)
-    financiële_gegevens = bereid_financiële_gegevens_voor(financiële_gegevens)
+    financiÃ«le_gegevens = haal_financiÃ«le_gegevens_op(symbool, startdatum, einddatum)
+    financiÃ«le_gegevens = bereid_financiÃ«le_gegevens_voor(financiÃ«le_gegevens)
 
     X, y = [], []
     for _ in range(aantal_reeksen):
-        max_startpunt = len(financiële_gegevens) - (sequence_length + 1)
+        max_startpunt = len(financiÃ«le_gegevens) - (sequence_length + 1)
         startpunt = random.randint(0, max_startpunt)
-        X.append(financiële_gegevens.iloc[startpunt:startpunt+sequence_length].values)
-        y.append(financiële_gegevens.iloc[startpunt+sequence_length][['Open', 'Close']].values)  # Meerdere output waarden
+        X.append(financiÃ«le_gegevens.iloc[startpunt:startpunt+sequence_length].values)
+        y.append(financiÃ«le_gegevens.iloc[startpunt+sequence_length][['Open', 'Close']].values)  # Meerdere output waarden
     X = np.array(X)
     y = np.array(y)
     return X, y
