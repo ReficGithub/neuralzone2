@@ -8,6 +8,7 @@ from tensorflow.keras.layers import LSTM, Dense
 
 def haal_financiele_gegevens_op(symbool, startdatum, einddatum):
     df = yf.download(symbool, start=startdatum, end=einddatum)
+    print(df)
     return df
 
 def voorbereid_trainingsdataset(symbool, einddatum, sequence_length, aantal_reeksen=6400):
