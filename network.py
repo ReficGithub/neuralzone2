@@ -48,7 +48,7 @@ def sla_model_op(model, model_naam):
     model.save(f'{model_naam}.keras')
     print(f'{model_naam}.keras is succesvol opgeslagen.')
 
-symbools = ["^SPX"]
+symbools = ["AAPL"]
 einddatum = '2023-08-08'
 sequence_length = 30
 batch_size = 32
