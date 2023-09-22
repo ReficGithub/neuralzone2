@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model, Sequential
 from tensorflow.keras.layers import LSTM, Dense
 
-def haal_financiële_gegevens_op(symbool, startdatum, einddatum):
+def haal_financiele_gegevens_op(symbool, startdatum, einddatum):
     df = yf.download(symbool, start=startdatum, end=einddatum)
     return df
 
@@ -14,21 +14,21 @@ def voorbereid_trainingsdataset(symbool, einddatum, sequence_length, aantal_reek
     einddatum_datetime = datetime.strptime(einddatum, '%Y-%m-%d')
     startdatum_datetime = einddatum_datetime - timedelta(days=365*5)
     startdatum = startdatum_datetime.strftime('%Y-%m-%d')
-    financiële_gegevens = haal_financiële_gegevens_op(symbool, startdatum, einddatum)
+    financiele_gegevens = haal_financiele_gegevens_op(symbool, startdatum, einddatum)
     kolommen = ['Open', 'High', 'Low', 'Close']
-    financiële_gegevens[kolommen] /= 10000
-    financiële_gegevens['Weekdag'] = financiële_gegevens.index.weekday / 10
-    financiële_gegevens.fillna(0.0, inplace=True)
-    financiële_gegevens.replace(0.0, 1e-7, inplace=True)
-    financiële_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
+    financiele_gegevens[kolommen] /= 10000
+    financiele_gegevens['Weekdag'] = financiele_gegevens.index.weekday / 10
+    financiele_gegevens.fillna(0.0, inplace=True)
+    financiele_gegevens.replace(0.0, 1e-7, inplace=True)
+    financiele_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
     
     X, y = [], []
     
     for _ in range(aantal_reeksen):
-        max_startpunt = len(financiële_gegevens) - (sequence_length + 1)
+        max_startpunt = len(financiele_gegevens) - (sequence_length + 1)
         startpunt = random.randint(0, max_startpunt)
-        X.append(financiële_gegevens.iloc[startpunt:startpunt+sequence_length].values)
-        y.append(financiële_gegevens.iloc[startpunt+sequence_length][["Open", "Close"]].values)
+        X.append(financiele_gegevens.iloc[startpunt:startpunt+sequence_length].values)
+        y.append(financiele_gegevens.iloc[startpunt+sequence_length][["Open", "Close"]].values)
 
     X = np.array(X)
     y = np.array(y)

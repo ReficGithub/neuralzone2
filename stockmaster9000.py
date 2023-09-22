@@ -8,18 +8,18 @@ import plotly.graph_objects as go
 import pytz
 
 
-# Functie om financiële gegevens op te halen en voor te bereiden, vergelijkbaar met selecteer_kolommen
-def bereid_financiële_gegevens_voor(financiële_gegevens):
+# Functie om financiele gegevens op te halen en voor te bereiden, vergelijkbaar met selecteer_kolommen
+def bereid_financiele_gegevens_voor(financiele_gegevens):
     # Kopieer DataFrame om waarschuwingen te voorkomen
-    financiële_gegevens = financiële_gegevens.copy()
-    financiële_gegevens[['Open', 'High', 'Low', 'Close']] /= 10000
-    financiële_gegevens['Weekdag'] = financiële_gegevens.index.weekday
-    financiële_gegevens['Weekdag'] /= 10
-    financiële_gegevens.fillna(0.0, inplace=True)
-    financiële_gegevens.replace(0.0, 1e-7, inplace=True)
-    financiële_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
-    financiële_gegevens = financiële_gegevens.tail(30)
-    return financiële_gegevens
+    financiele_gegevens = financiele_gegevens.copy()
+    financiele_gegevens[['Open', 'High', 'Low', 'Close']] /= 10000
+    financiele_gegevens['Weekdag'] = financiele_gegevens.index.weekday
+    financiele_gegevens['Weekdag'] /= 10
+    financiele_gegevens.fillna(0.0, inplace=True)
+    financiele_gegevens.replace(0.0, 1e-7, inplace=True)
+    financiele_gegevens.drop(['Adj Close', 'Volume'], axis=1, inplace=True)
+    financiele_gegevens = financiele_gegevens.tail(30)
+    return financiele_gegevens
 
 def main():
     model_naam = "SPX1000x4.keras"
@@ -40,10 +40,10 @@ def main():
     startdatum_datetime = einddatum_datetime - timedelta(days=sequence_length)
     startdatum = startdatum_datetime.strftime('%Y-%m-%d')
 
-    financiële_gegevens = yf.download(symbool, start=startdatum, end=einddatum)
-    financiële_gegevens = bereid_financiële_gegevens_voor(financiële_gegevens)
+    financiele_gegevens = yf.download(symbool, start=startdatum, end=einddatum)
+    financiele_gegevens = bereid_financiele_gegevens_voor(financiele_gegevens)
 
-    invoer_reeks = financiële_gegevens.iloc[-sequence_length:].values
+    invoer_reeks = financiele_gegevens.iloc[-sequence_length:].values
     voorspelling = model.predict(np.expand_dims(invoer_reeks, axis=0))
     voorspelling *= 10000
     invoer_reeks *= 10000
